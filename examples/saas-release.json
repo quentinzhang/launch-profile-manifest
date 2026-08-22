@@ -1,0 +1,16 @@
+{
+  "$schema": "https://launchprofile.org/spec/v0.1/release-envelope.schema.json",
+  "envelopeVersion": "0.1",
+  "id": "urn:uuid:117197cd-4273-44a9-a46c-596873923b03",
+  "profileId": "https://example.com/.well-known/launch-profile.json",
+  "type": "major_release",
+  "version": "2.0",
+  "status": "planned",
+  "date": "2026-09-01",
+  "name": {"en": "Example Product 2.0"},
+  "summary": {"en": "A faster workflow and a reusable release record."},
+  "changes": [{"title": {"en": "Release envelopes"}, "description": {"en": "Keep each launch separate from stable product facts."}}],
+  "channels": ["product_hunt", "newsletter"],
+  "provenance": {"updatedAt": "2026-08-22T00:00:00Z", "sources": [{"type": "user_input"}], "confirmedByUser": true},
+  "extensions": {}
+}

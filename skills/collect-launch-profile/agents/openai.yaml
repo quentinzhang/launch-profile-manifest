@@ -1,0 +1,6 @@
+interface:
+  display_name: "Collect Launch Profile"
+  short_description: "Turn product sources into a portable launch profile"
+  default_prompt: "Use $collect-launch-profile to collect my product information and create a validated draft manifest."
+policy:
+  allow_implicit_invocation: true

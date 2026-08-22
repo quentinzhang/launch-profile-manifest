@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchprofile.org/spec/v0.1/launch-profile-manifest.schema.json",
+  "title": "Launch Profile Manifest v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "manifestVersion", "id", "product", "provenance"],
+  "properties": {
+    "$schema": {"const": "https://launchprofile.org/spec/v0.1/launch-profile-manifest.schema.json"},
+    "@context": {"const": "https://schema.org", "default": "https://schema.org"},
+    "manifestVersion": {"const": "0.1"},
+    "id": {"type": "string", "format": "uri", "minLength": 1, "maxLength": 2048},
+    "product": {"$ref": "#/$defs/product"},
+    "assets": {"type": "array", "maxItems": 100, "items": {"$ref": "#/$defs/asset"}},
+    "claims": {"type": "array", "maxItems": 100, "items": {"$ref": "#/$defs/claim"}},
+    "externalManifests": {"type": "array", "maxItems": 30, "items": {"$ref": "#/$defs/externalManifest"}},
+    "provenance": {"$ref": "#/$defs/provenance"},
+    "extensions": {"type": "object", "default": {}}
+  },
+  "$defs": {
+    "localizedText": {
+      "type": "object",
+      "propertyNames": {"pattern": "^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"},
+      "additionalProperties": {"type": "string", "minLength": 1}
+    },
+    "descriptionSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "short": {"type": "string", "maxLength": 300},
+        "long": {"type": "string", "maxLength": 5000}
+      }
+    },
+    "namedDescription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "maxLength": 160},
+        "description": {"$ref": "#/$defs/localizedText"}
+      }
+    },
+    "offer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "maxLength": 160},
+        "price": {"type": "number", "minimum": 0},
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "billingPeriod": {"type": "string", "maxLength": 80},
+        "url": {"type": "string", "format": "uri"},
+        "trial": {"type": "boolean"}
+      }
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["@type", "name", "stage"],
+      "properties": {
+        "@type": {"enum": ["SoftwareApplication", "Product", "Service", "CreativeWork", "PodcastSeries", "Periodical", "Course", "Organization", "Other"]},
+        "name": {"type": "string", "minLength": 1, "maxLength": 160},
+        "stage": {"enum": ["idea", "prototype", "beta", "live", "relaunch"]},
+        "canonicalUrl": {"type": "string", "format": "uri"},
+        "tagline": {"$ref": "#/$defs/localizedText"},
+        "descriptions": {"type": "object", "additionalProperties": {"$ref": "#/$defs/descriptionSet"}},
+        "categories": {"type": "array", "maxItems": 30, "items": {"type": "string", "minLength": 1}},
+        "audiences": {"type": "array", "maxItems": 30, "items": {"$ref": "#/$defs/namedDescription"}},
+        "features": {"type": "array", "maxItems": 100, "items": {"$ref": "#/$defs/namedDescription"}},
+        "offers": {"type": "array", "maxItems": 30, "items": {"$ref": "#/$defs/offer"}},
+        "supportUrl": {"type": "string", "format": "uri"},
+        "socialLinks": {"type": "array", "maxItems": 30, "items": {"type": "string", "format": "uri"}}
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "url"],
+      "properties": {
+        "role": {"enum": ["logo", "icon", "screenshot", "demo_video", "social_preview", "press_kit", "other"]},
+        "url": {"type": "string", "format": "uri"},
+        "mimeType": {"type": "string", "maxLength": 120},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "alt": {"$ref": "#/$defs/localizedText"},
+        "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+        "license": {"type": "string", "maxLength": 240}
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/localizedText"},
+        "evidenceUrls": {"type": "array", "maxItems": 20, "items": {"type": "string", "format": "uri"}},
+        "verifiedAt": {"type": "string", "format": "date-time"}
+      }
+    },
+    "externalManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "url"],
+      "properties": {
+        "type": {"enum": ["schema_org", "web_app_manifest", "rss", "podcast_rss", "openapi", "llms_txt", "merchant_feed", "other"]},
+        "url": {"type": "string", "format": "uri"},
+        "version": {"type": "string", "maxLength": 80},
+        "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {"enum": ["website", "document", "app_store", "github", "user_input", "other"]},
+        "url": {"type": "string", "format": "uri"},
+        "title": {"type": "string", "maxLength": 240},
+        "retrievedAt": {"type": "string", "format": "date-time"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["updatedAt", "confirmedByUser"],
+      "properties": {
+        "updatedAt": {"type": "string", "format": "date-time"},
+        "sources": {"type": "array", "maxItems": 100, "items": {"$ref": "#/$defs/source"}},
+        "confirmedByUser": {"type": "boolean"}
+      }
+    }
+  }
+}

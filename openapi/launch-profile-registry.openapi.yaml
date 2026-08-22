@@ -1,0 +1,112 @@
+openapi: 3.1.0
+info:
+  title: Launch Profile Registry API
+  version: 0.1.0
+  description: Authenticated persistence for Launch Profile Manifests and their Release Envelopes.
+servers:
+  - url: https://api.example.com/api/launch_manifest
+security:
+  - bearerAuth: []
+paths:
+  /profiles:
+    get:
+      operationId: listProfiles
+      responses:
+        "200": {description: Profile summaries}
+    post:
+      operationId: createProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/ProfileWrite"}
+      responses:
+        "201": {description: Created profile}
+        "400": {description: Invalid manifest}
+  /profiles/{profileUuid}:
+    parameters:
+      - {$ref: "#/components/parameters/ProfileUuid"}
+    get:
+      operationId: getProfile
+      responses:
+        "200": {description: Profile}
+        "404": {description: Not found}
+    put:
+      operationId: updateProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/ProfileWrite"}
+      responses:
+        "200": {description: Updated profile}
+    delete:
+      operationId: deleteProfile
+      responses:
+        "200": {description: Deleted}
+  /profiles/{profileUuid}/releases:
+    parameters:
+      - {$ref: "#/components/parameters/ProfileUuid"}
+    get:
+      operationId: listReleases
+      responses:
+        "200": {description: Release summaries}
+    post:
+      operationId: createRelease
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/ReleaseWrite"}
+      responses:
+        "201": {description: Created release}
+        "400": {description: Invalid envelope or profileId mismatch}
+  /profiles/{profileUuid}/releases/{releaseUuid}:
+    parameters:
+      - {$ref: "#/components/parameters/ProfileUuid"}
+      - name: releaseUuid
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    get:
+      operationId: getRelease
+      responses:
+        "200": {description: Release envelope}
+    put:
+      operationId: updateRelease
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/ReleaseWrite"}
+      responses:
+        "200": {description: Updated release}
+    delete:
+      operationId: deleteRelease
+      responses:
+        "200": {description: Deleted}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    ProfileUuid:
+      name: profileUuid
+      in: path
+      required: true
+      schema: {type: string, format: uuid}
+  schemas:
+    ProfileWrite:
+      type: object
+      required: [manifest]
+      properties:
+        manifest:
+          $ref: ../spec/v0.1/launch-profile-manifest.schema.json
+        is_public: {type: boolean, default: false}
+    ReleaseWrite:
+      type: object
+      required: [release]
+      properties:
+        release:
+          $ref: ../spec/v0.1/release-envelope.schema.json
