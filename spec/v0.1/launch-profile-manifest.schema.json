@@ -57,7 +57,7 @@
       "additionalProperties": false,
       "required": ["@type", "name", "stage"],
       "properties": {
-        "@type": {"enum": ["SoftwareApplication", "Product", "Service", "CreativeWork", "PodcastSeries", "Periodical", "Course", "Organization", "Other"]},
+        "@type": {"enum": ["SoftwareApplication", "Product", "Service", "CreativeWork", "Periodical", "Course", "Organization", "Other"]},
         "name": {"type": "string", "minLength": 1, "maxLength": 160},
         "stage": {"enum": ["idea", "prototype", "beta", "live", "relaunch"]},
         "canonicalUrl": {"type": "string", "format": "uri"},
@@ -101,7 +101,7 @@
       "additionalProperties": false,
       "required": ["type", "url"],
       "properties": {
-        "type": {"enum": ["schema_org", "web_app_manifest", "rss", "podcast_rss", "openapi", "llms_txt", "merchant_feed", "other"]},
+        "type": {"enum": ["schema_org", "web_app_manifest", "rss", "openapi", "llms_txt", "merchant_feed", "other"]},
         "url": {"type": "string", "format": "uri"},
         "version": {"type": "string", "maxLength": 80},
         "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}

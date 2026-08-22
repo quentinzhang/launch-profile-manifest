@@ -46,7 +46,6 @@ When sources disagree, expose the conflict and ask the user. Do not silently cho
 - Paid downloadable or physical product: `Product`
 - Consulting or managed operation: `Service`
 - Newsletter or serial publication: `Periodical`
-- Podcast: `PodcastSeries`
 - Course: `Course`
 - Community or membership organization: `Organization`
 - Early concepts that do not fit cleanly: `Other`

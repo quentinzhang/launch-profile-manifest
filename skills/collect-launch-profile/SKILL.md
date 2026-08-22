@@ -9,7 +9,7 @@ Create a truthful, reusable Launch Profile Manifest without requiring a public w
 
 ## Workflow
 
-1. Establish the product stage and available sources. Accept conversation, pasted notes, uploaded documents, websites, app-store pages, repositories, feeds, and existing manifests.
+1. Establish the product stage and available sources. Accept conversation, pasted notes, uploaded documents, websites, app-store pages, repositories, feeds, and existing manifests. For podcasts, preserve the RSS or Podcast Namespace document as the source of truth instead of modeling the show in this draft.
 2. Extract source-backed facts before asking questions. Record every material source in `provenance.sources`.
 3. Read [references/discovery.md](references/discovery.md) and ask only for high-impact gaps. Do not force users to complete optional fields.
 4. Separate facts, user claims, and inference:
