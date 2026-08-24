@@ -1,5 +1,5 @@
 {
-  "$schema": "https://launchprofile.org/spec/v0.1/release-envelope.schema.json",
+  "$schema": "https://quentinzhang.github.io/launch-profile-manifest/spec/v0.1/release-envelope.schema.json",
   "envelopeVersion": "0.1",
   "id": "urn:uuid:117197cd-4273-44a9-a46c-596873923b03",
   "profileId": "https://example.com/.well-known/launch-profile.json",

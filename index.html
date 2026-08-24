@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="An open, portable format for product launch profiles and release records.">
+    <title>Launch Profile Manifest</title>
+    <link rel="stylesheet" href="site.css">
+  </head>
+  <body>
+    <header class="nav">
+      <a class="brand" href="./">LPM <span>Draft v0.1</span></a>
+      <nav aria-label="Primary navigation">
+        <a href="#documents">Schemas</a>
+        <a href="https://github.com/quentinzhang/launch-profile-manifest">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">Open launch metadata</p>
+        <h1>Define your product once.<br>Launch it everywhere.</h1>
+        <p class="lede">Launch Profile Manifest is a portable JSON format for durable product facts, release-specific context, provenance, and agent-assisted launch workflows.</p>
+        <div class="actions">
+          <a class="primary" href="spec/v0.1/launch-profile-manifest.schema.json">View profile schema</a>
+          <a class="secondary" href="https://github.com/quentinzhang/launch-profile-manifest">Read on GitHub</a>
+        </div>
+        <p class="notice"><strong>Status:</strong> v0.1 is an early draft schema and reference implementation, not an industry standard.</p>
+      </section>
+
+      <section class="principle" aria-label="Core model">
+        <article><span>01</span><h2>Profile</h2><p>Stable identity, positioning, audience, offers, assets, claims, and provenance.</p></article>
+        <article><span>02</span><h2>Release</h2><p>A launch, relaunch, major release, integration, market entry, or distribution wave.</p></article>
+        <article><span>03</span><h2>Reuse</h2><p>One source that channels, tools, and agents can consume without locking the owner in.</p></article>
+      </section>
+
+      <section class="documents" id="documents">
+        <p class="eyebrow">Normative artifacts</p>
+        <h2>Start with the schemas</h2>
+        <div class="document-grid">
+          <a href="spec/v0.1/launch-profile-manifest.schema.json"><strong>Launch Profile Manifest</strong><span>Durable product information</span><code>JSON Schema 2020-12</code></a>
+          <a href="spec/v0.1/release-envelope.schema.json"><strong>Release Envelope</strong><span>One release or distribution event</span><code>JSON Schema 2020-12</code></a>
+          <a href="examples/saas-profile.json"><strong>Example Profile</strong><span>A minimal SaaS document</span><code>JSON</code></a>
+          <a href="examples/saas-release.json"><strong>Example Release</strong><span>A release linked to a profile</span><code>JSON</code></a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Launch Profile Manifest is open source under the MIT License.</p>
+      <a href="https://github.com/quentinzhang/launch-profile-manifest/issues">Feedback and proposals</a>
+    </footer>
+  </body>
+</html>

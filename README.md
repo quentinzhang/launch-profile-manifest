@@ -7,6 +7,8 @@ LPM separates two kinds of records:
 - **Launch Profile Manifest** contains durable product identity, positioning, audience, offers, assets, claims, and provenance.
 - **Release Envelope** describes one launch, relaunch, major release, integration, market entry, or distribution wave for a profile.
 
+Draft specification site: <https://quentinzhang.github.io/launch-profile-manifest/>
+
 The specification is product-type neutral. A profile may represent an app, SaaS product, service, newsletter, podcast, open-source project, community, course, or another digital product.
 
 ## Status

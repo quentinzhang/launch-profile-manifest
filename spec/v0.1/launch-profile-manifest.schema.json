@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://launchprofile.org/spec/v0.1/launch-profile-manifest.schema.json",
+  "$id": "https://quentinzhang.github.io/launch-profile-manifest/spec/v0.1/launch-profile-manifest.schema.json",
   "title": "Launch Profile Manifest v0.1",
   "type": "object",
   "additionalProperties": false,
   "required": ["$schema", "manifestVersion", "id", "product", "provenance"],
   "properties": {
-    "$schema": {"const": "https://launchprofile.org/spec/v0.1/launch-profile-manifest.schema.json"},
+    "$schema": {"const": "https://quentinzhang.github.io/launch-profile-manifest/spec/v0.1/launch-profile-manifest.schema.json"},
     "@context": {"const": "https://schema.org", "default": "https://schema.org"},
     "manifestVersion": {"const": "0.1"},
     "id": {"type": "string", "format": "uri", "minLength": 1, "maxLength": 2048},
