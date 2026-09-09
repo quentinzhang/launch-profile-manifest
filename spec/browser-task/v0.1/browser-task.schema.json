@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quentinzhang.github.io/launch-profile-manifest/spec/browser-task/v0.1/browser-task.schema.json",
+  "title": "Browser Task v0.1",
+  "description": "A portable, self-contained handoff from an AI agent to a browser runner. The runner may store, open, and prefill the task, but irreversible actions remain human-controlled.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "taskVersion", "taskId", "taskType", "requiresConfirmation", "targets"],
+  "properties": {
+    "$schema": {
+      "const": "https://quentinzhang.github.io/launch-profile-manifest/spec/browser-task/v0.1/browser-task.schema.json"
+    },
+    "taskVersion": {"const": "0.1"},
+    "taskId": {"type": "string", "minLength": 1, "maxLength": 120},
+    "taskType": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "Portable workflow label, for example directory_submission."
+    },
+    "taskLabel": {"type": "string", "maxLength": 160},
+    "campaignId": {"type": "string", "maxLength": 120},
+    "sourceAgent": {"type": "string", "maxLength": 80},
+    "sourceTaskId": {"type": "string", "maxLength": 120},
+    "requiresConfirmation": {
+      "const": true,
+      "description": "Every irreversible action, including final submit, publish, login, captcha, checkout, and payment, requires human confirmation."
+    },
+    "requestedCapabilities": {
+      "type": "array",
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {"enum": ["store_task", "open_targets", "autofill"]},
+      "contains": {"const": "store_task"},
+      "default": ["store_task"]
+    },
+    "profileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileId"],
+      "properties": {
+        "profileId": {"type": "string", "format": "uri", "pattern": "^(https?://|urn:)", "maxLength": 2048},
+        "manifestVersion": {"type": "string", "maxLength": 40},
+        "releaseId": {"type": "string", "format": "uri", "pattern": "^(https?://|urn:)", "maxLength": 2048},
+        "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}
+      },
+      "description": "Optional lineage only. A runner must not need to resolve this reference because the task carries its own fill values."
+    },
+    "productProfile": {
+      "type": "object",
+      "description": "Self-contained product values to fill. Values derived from LPM are copied here rather than resolved at execution time.",
+      "propertyNames": {"$ref": "#/$defs/productFieldKey"},
+      "additionalProperties": {"type": "string", "maxLength": 5000},
+      "default": {}
+    },
+    "marketingProfile": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/marketingFieldKey"},
+      "additionalProperties": {"type": "string", "maxLength": 5000},
+      "default": {}
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["submissionUrl", "siteProfile"],
+        "properties": {
+          "targetId": {"type": "string", "maxLength": 120},
+          "siteId": {"type": "string", "maxLength": 100},
+          "submissionUrl": {"type": "string", "format": "uri", "pattern": "^https?://"},
+          "status": {"type": "string", "maxLength": 60, "default": "ready"},
+          "siteProfile": {
+            "$ref": "https://quentinzhang.github.io/launch-profile-manifest/spec/browser-task/v0.1/site-target-profile.schema.json"
+          }
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "overwrite": {"type": "boolean", "default": false},
+        "renderOverlay": {"type": "boolean", "default": true}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "createdAt": {"type": "string", "format": "date-time"},
+        "generator": {"type": "string", "maxLength": 240},
+        "skill": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version"],
+          "properties": {
+            "name": {"type": "string", "maxLength": 80},
+            "version": {"type": "string", "maxLength": 40},
+            "source": {"type": "string", "format": "uri", "pattern": "^https?://"}
+          }
+        },
+        "catalogueUrl": {"type": "string", "format": "uri", "pattern": "^https?://"}
+      }
+    },
+    "extensions": {"type": "object", "default": {}}
+  },
+  "$defs": {
+    "productFieldKey": {
+      "enum": [
+        "productName", "companyName", "websiteUrl", "tagline", "shortDescription",
+        "longDescription", "categories", "pricing", "tags", "contactEmail",
+        "founderName", "logoUrl", "screenshotUrls", "demoVideoUrl", "twitterUrl", "linkedinUrl"
+      ]
+    },
+    "marketingFieldKey": {
+      "enum": [
+        "title", "body", "excerpt", "sourceUrl", "canonicalUrl", "callToAction",
+        "authorName", "recipientName", "recipientEmail", "recipientCompany", "audience",
+        "channel", "notes"
+      ]
+    }
+  }
+}

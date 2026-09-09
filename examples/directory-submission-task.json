@@ -1,0 +1,72 @@
+{
+  "$schema": "https://quentinzhang.github.io/launch-profile-manifest/spec/browser-task/v0.1/browser-task.schema.json",
+  "taskVersion": "0.1",
+  "taskId": "example-directory-submission-001",
+  "taskType": "directory_submission",
+  "taskLabel": "Submit Example Product to Example Directory",
+  "campaignId": "example-launch-wave",
+  "sourceAgent": "compatible-agent",
+  "requiresConfirmation": true,
+  "requestedCapabilities": ["store_task"],
+  "profileRef": {
+    "profileId": "https://example.com/.well-known/launch-profile.json",
+    "manifestVersion": "0.1"
+  },
+  "productProfile": {
+    "productName": "Example Product",
+    "websiteUrl": "https://example.com",
+    "tagline": "Define it once. Launch it everywhere.",
+    "shortDescription": "A portable product profile example.",
+    "categories": "Productivity",
+    "pricing": "Pro — 19 USD / month",
+    "logoUrl": "https://example.com/logo.png"
+  },
+  "targets": [
+    {
+      "targetId": "example-directory",
+      "siteId": "example-directory",
+      "submissionUrl": "https://directory.example/submit",
+      "status": "ready",
+      "siteProfile": {
+        "$schema": "https://quentinzhang.github.io/launch-profile-manifest/spec/browser-task/v0.1/site-target-profile.schema.json",
+        "profileVersion": "0.1",
+        "id": "example-directory",
+        "name": "Example Directory",
+        "hosts": ["directory.example"],
+        "submissionUrl": "https://directory.example/submit",
+        "homepageUrl": "https://directory.example",
+        "channelType": "submission_listing",
+        "bestFit": "Publicly available software products",
+        "submissionPricing": "free",
+        "requiresLogin": false,
+        "submissionNote": "Example-only target. Replace it with a currently verified live target before delivery.",
+        "manualFields": ["logoUpload"],
+        "manualSteps": ["Review the completed form and press the final submit button."],
+        "fieldMappingStatus": "verify_before_fill",
+        "fieldSelectors": {
+          "productName": ["#product-name", "[name='product_name']"],
+          "websiteUrl": ["#website", "[name='website']"],
+          "shortDescription": ["#description", "[name='description']"]
+        },
+        "fieldHints": {
+          "productName": ["product name"],
+          "websiteUrl": ["website", "product URL"],
+          "shortDescription": ["short description"]
+        },
+        "source": "example-only",
+        "extensions": {}
+      }
+    }
+  ],
+  "options": {"overwrite": false, "renderOverlay": true},
+  "provenance": {
+    "createdAt": "2026-09-09T00:00:00Z",
+    "generator": "directory-submission reference builder",
+    "skill": {
+      "name": "directory-submission",
+      "version": "0.1.0",
+      "source": "https://github.com/quentinzhang/launch-profile-manifest/tree/main/skills/directory-submission"
+    }
+  },
+  "extensions": {}
+}

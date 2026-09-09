@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quentinzhang.github.io/launch-profile-manifest/spec/browser-task/v0.1/site-target-profile.schema.json",
+  "title": "Site Target Profile v0.1",
+  "description": "Reusable metadata for opening one form and mapping portable field values onto its controls.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "hosts", "submissionUrl"],
+  "properties": {
+    "$schema": {
+      "const": "https://quentinzhang.github.io/launch-profile-manifest/spec/browser-task/v0.1/site-target-profile.schema.json"
+    },
+    "profileVersion": {"const": "0.1", "default": "0.1"},
+    "id": {"type": "string", "minLength": 1, "maxLength": 100},
+    "name": {"type": "string", "maxLength": 160},
+    "hosts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 180, "pattern": "^[A-Za-z0-9.-]+$"},
+      "description": "Hostnames on which this mapping may be used. A runner must refuse a host mismatch."
+    },
+    "submissionUrl": {"type": "string", "format": "uri", "pattern": "^https?://"},
+    "homepageUrl": {"type": "string", "format": "uri", "pattern": "^https?://"},
+    "channelType": {
+      "enum": [
+        "launch_campaign", "submission_listing", "ai_tool_directory", "ai_agent_directory",
+        "community_post", "marketplace_review",
+        "ltd_deal_marketplace", "ltd_deal_community", "podcast_directory", "research_source", "other"
+      ]
+    },
+    "bestFit": {"type": "string", "maxLength": 500},
+    "submissionAccess": {"type": "string", "maxLength": 100},
+    "submissionPricing": {"enum": ["free", "paid", "freemium"]},
+    "requiresLogin": {"type": "boolean"},
+    "submissionNote": {"type": "string", "maxLength": 500},
+    "requiredAssets": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {"type": "string", "maxLength": 160}
+    },
+    "manualFields": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {"type": "string", "maxLength": 160},
+      "description": "Controls or uploads intentionally left to the human, including fields outside the canonical autofill vocabulary."
+    },
+    "manualSteps": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {"type": "string", "maxLength": 300},
+      "description": "Actions a conforming runner must not automate."
+    },
+    "autofillTrigger": {
+      "enum": ["immediate", "when_target_fields_visible", "when_required_fields_visible"],
+      "default": "immediate"
+    },
+    "requiredAutofillFields": {
+      "type": "array",
+      "maxItems": 43,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/fieldKey"}
+    },
+    "fieldMappingStatus": {
+      "enum": ["verified", "partial", "verify_before_fill", "unmapped", "manual_only"],
+      "default": "unmapped"
+    },
+    "fieldMappingVerifiedAt": {"type": "string", "format": "date-time"},
+    "fieldSelectors": {"$ref": "#/$defs/fieldMap"},
+    "fieldHints": {"$ref": "#/$defs/fieldMap"},
+    "autofillUrlPatterns": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {"type": "string", "maxLength": 500}
+    },
+    "source": {"type": "string", "maxLength": 240},
+    "extensions": {"type": "object", "default": {}}
+  },
+  "$defs": {
+    "fieldKey": {
+      "enum": [
+        "productName", "companyName", "websiteUrl", "tagline", "shortDescription",
+        "longDescription", "categories", "pricing", "tags", "contactEmail",
+        "founderName", "logoUrl", "screenshotUrls", "demoVideoUrl", "twitterUrl", "linkedinUrl",
+        "title", "body", "excerpt", "sourceUrl", "canonicalUrl", "callToAction",
+        "authorName", "recipientName", "recipientEmail", "recipientCompany", "audience",
+        "channel", "notes", "showTitle", "rssFeedUrl", "description", "primaryCategory",
+        "secondaryCategory", "language", "country", "explicit", "ownerName", "ownerEmail",
+        "contactName", "artworkUrl", "copyright", "youtubeUrl"
+      ]
+    },
+    "fieldMap": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/fieldKey"},
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 16,
+        "items": {"type": "string", "minLength": 1, "maxLength": 260}
+      }
+    }
+  }
+}

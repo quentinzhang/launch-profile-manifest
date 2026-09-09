@@ -23,6 +23,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate reference documents
+        run: |
+          python -m pip install 'jsonschema[format]>=4,<5'
+          python skills/collect-launch-profile/scripts/validate_documents.py \
+            --profile examples/saas-profile.json \
+            --release examples/saas-release.json \
+            --browser-task examples/directory-submission-task.json
+          python skills/directory-submission/scripts/build_browser_task.py \
+            --profile examples/saas-profile.json \
+            --target examples/directory-target-profile.json \
+            --source-agent github-actions \
+            --output /tmp/browser-task.json
+          python skills/collect-launch-profile/scripts/validate_documents.py \
+            --browser-task /tmp/browser-task.json
+          python skills/directory-submission/scripts/build_browser_task.py \
+            --profile examples/saas-profile.json \
+            --release examples/saas-release.json \
+            --target examples/directory-target-profile.json \
+            --source-agent consolex.ai \
+            --transport consolex-web \
+            --output /tmp/consolex-envelope.json
+          python skills/collect-launch-profile/scripts/validate_documents.py \
+            --browser-task /tmp/consolex-envelope.json
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
