@@ -24,6 +24,7 @@ spec/browser-task/v0.1/            Browser Task and Site Target Profile schemas
 examples/                          Valid example documents
 openapi/                           Registry API contract
 skills/collect-launch-profile/    Agent Skill for product discovery
+skills/launch-profile-manager/    Agent Skill for authenticated registry management
 skills/directory-submission/       Agent Skill for directory task creation
 mcp_server/                        Streamable HTTP MCP API client
 ```
@@ -45,6 +46,7 @@ mcp_server/                        Streamable HTTP MCP API client
 - [Browser Task v0.1](spec/browser-task/v0.1/README.md)
 - [Registry OpenAPI contract](openapi/launch-profile-registry.openapi.yaml)
 - [Product discovery Agent Skill](skills/collect-launch-profile/SKILL.md)
+- [Launch Profile Manager Agent Skill](skills/launch-profile-manager/SKILL.md)
 - [Directory submission Agent Skill](skills/directory-submission/SKILL.md)
 - [Streamable HTTP MCP server](mcp_server/README.md)
 
@@ -73,14 +75,17 @@ The example target uses the reserved `.example` domain and must not be treated a
 
 ## Install an Agent Skill
 
-After cloning the repository, an agent can read the skills directly. Agents supported by the open `skills` CLI can install the directory workflow with:
+After cloning the repository, an agent can read the skills directly. Agents supported by the open `skills` CLI can install the needed workflow with:
 
 ```bash
 npx skills add quentinzhang/launch-profile-manifest \
   --skill directory-submission
+
+npx skills add quentinzhang/launch-profile-manifest \
+  --skill launch-profile-manager
 ```
 
-Installing a Skill teaches the agent how to create the task. Delivering it to a browser still requires a compatible ConsoleX Web or local Agent Inbox adapter.
+The directory Skill creates a human-reviewed Browser Task; delivering it still requires a compatible ConsoleX Web or local Agent Inbox adapter. The manager Skill calls an authenticated ConsoleX Launch Manifest API and requires `CONSOLEX_API_BASE_URL` plus a user-scoped `CONSOLEX_API_KEY` in the Skill environment.
 
 ## Versioning
 

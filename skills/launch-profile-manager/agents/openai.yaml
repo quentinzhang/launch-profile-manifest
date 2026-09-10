@@ -1,0 +1,7 @@
+interface:
+  display_name: "Launch Profile Manager"
+  short_description: "Safely manage ConsoleX Launch profiles"
+  default_prompt: "Use $launch-profile-manager to create, inspect, update, or deliberately delete my ConsoleX Launch product profile."
+
+policy:
+  allow_implicit_invocation: true
