@@ -29,6 +29,25 @@ Replace `codex` and the Add-on path with the actual producer and installation. N
 
 A successful `add` means **queued for browser review**, not executed. `processed` means the extension imported the task; it still does not mean a form was submitted. Preserve the JSON and report the missing adapter if the CLI, Native Messaging host, or extension is unavailable.
 
+## End-to-end route execution
+
+If you want the skill to choose and execute a route in one step, use:
+
+```bash
+python skills/directory-submission/scripts/build_browser_task.py \
+  --profile /absolute/path/to/launch-profile.json \
+  --target /absolute/path/to/site-target-profile.json \
+  --source-agent codex \
+  --route auto \
+  --deliver \
+  --addon-path /absolute/path/to/consolex_addon \
+  --output /absolute/path/to/browser-task.json
+```
+
+Use `--product-profile /absolute/path/to/reviewed-product-profile.json` instead of `--profile` when the product facts were extracted and confirmed locally. Delivery behavior is identical and no Launch Profile API is required.
+
+`--route auto` prefers `agent-inbox` when `--addon-path` exists and points to a local ConsoleX Add-on checkout; otherwise it emits ConsoleX Web card output.
+
 ## Compatibility invariant
 
 Both routes carry the same Browser Task object. Transport adapters may add an envelope or provenance, but must not weaken `requiresConfirmation`, request autonomous final submission, or remove manual steps.

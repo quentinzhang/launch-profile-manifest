@@ -83,6 +83,31 @@ python skills/directory-submission/scripts/build_browser_task.py \
   --output /tmp/browser-task.json
 ```
 
+Launch Profile Manager is optional. An agent can extract a reviewed local Product Profile packet from a document or conversational description and build the same Browser Task:
+
+```bash
+python skills/directory-submission/scripts/build_browser_task.py \
+  --product-profile /absolute/path/to/reviewed-product-profile.json \
+  --target examples/directory-target-profile.json \
+  --source-agent codex \
+  --output /tmp/browser-task.json
+```
+
+See the Skill's [Product Profile extraction guide](skills/directory-submission/references/profile-extraction.md) for canonical fields, evidence statuses, and confirmation rules.
+
+For local compatible-agent delivery, include route and delivery flags:
+
+```bash
+python skills/directory-submission/scripts/build_browser_task.py \
+  --profile examples/saas-profile.json \
+  --target examples/directory-target-profile.json \
+  --source-agent codex \
+  --route agent-inbox \
+  --deliver \
+  --addon-path /absolute/path/to/consolex_addon \
+  --output /tmp/browser-task.json
+```
+
 The example target uses the reserved `.example` domain and must not be treated as a live submission destination.
 
 ## Install an Agent Skill
