@@ -1,6 +1,6 @@
-# Launch Profile MCP
+# Launch Operations Protocol MCP
 
-This server exposes a Launch Profile Registry API as MCP tools over Streamable HTTP. It is an API client and does not access the registry database directly.
+This server exposes the Launch Operations Protocol registry API as MCP tools over Streamable HTTP. It is an API client and does not access the registry database directly.
 
 ## Configuration
 

@@ -1,16 +1,28 @@
-# Launch Profile Manifest
+# Launch Operations Protocol
 
-Launch Profile Manifest (LPM) is an open, portable format for describing a product once and reusing that information across launch, listing, distribution, and agent workflows. The repository also defines a draft Browser Task handoff and installable Agent Skills that turn confirmed profile facts into human-reviewed browser work.
+Launch Operations Protocol (LOP) is an open protocol set for launch workflow coordination across launch planning, distribution channels, and agent workflows. The protocol's core profile layer is the `Launch Profile Manifest` (LPM), paired with `Release Envelope` and `Browser Task` records.
+
+This repository keeps the original `launch-profile-manifest` package path for backwards compatibility, while presenting an umbrella identity for all related launch-operational artifacts.
 
 The project separates three kinds of records:
 
-- **Launch Profile Manifest** contains durable product identity, positioning, audience, offers, assets, claims, and provenance.
+- **Launch Profile Manifest** (core profile layer) contains durable product identity, positioning, audience, offers, assets, claims, and provenance.
 - **Release Envelope** describes one launch, relaunch, major release, integration, market entry, or distribution wave for a profile.
 - **Browser Task** is a self-contained, transport-neutral instruction for storing, opening, and prefilling one batch of browser work. It never authorizes final submission.
 
 Draft specification site: <https://quentinzhang.github.io/launch-profile-manifest/>
 
 The specification is product-type neutral. A profile may represent an app, SaaS product, service, newsletter, podcast, open-source project, community, course, or another digital product.
+
+## Naming and migration note
+
+Current canonical repository and package path remains `launch-profile-manifest` to preserve existing schema `$id` and `$ref` links in v0.1:
+
+- `spec/v0.1/launch-profile-manifest.schema.json`
+- `spec/v0.1/release-envelope.schema.json`
+- `openapi/launch-profile-registry.openapi.yaml`
+
+If the name is changed in the future, the migration should happen only after a stable domain is prepared for protocol identifiers (for example `protocol.consolex.ai`) and a version-aware path strategy is in place (e.g., keep current v0.1 IDs and introduce v0.2 canonical IDs on the new domain).
 
 ## Status
 
