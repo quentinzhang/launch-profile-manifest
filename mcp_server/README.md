@@ -5,13 +5,17 @@ This server exposes the Launch Operations Protocol registry API as MCP tools ove
 ## Configuration
 
 ```bash
-export LAUNCH_PROFILE_API_BASE_URL="https://consolex.example/api/launch_manifest"
-export LAUNCH_PROFILE_API_TOKEN="your-consolex-jwt"
+export CONSOLEX_API_KEY="your-user-api-key"
+
+# Optional; this is already the default.
+export CONSOLEX_API_BASE_URL="https://api.evalsone.com"
 export LAUNCH_PROFILE_MCP_HOST="127.0.0.1"
 export LAUNCH_PROFILE_MCP_PORT="8765"
 ```
 
-The token is sent through ConsoleX's `Blade-auth` header by default. Override `LAUNCH_PROFILE_AUTH_HEADER` for another compatible registry.
+Create or rotate the user-scoped key in ConsoleX Settings. The MCP sends it as `Authorization: Bearer <api-key>` and never uses the browser-only `Blade-auth` JWT header. Do not pass the key as a tool argument, save it in MCP configuration committed to source control, or expose it to MCP clients.
+
+`CONSOLEX_API_BASE_URL` must be an HTTPS origin without a path. The MCP appends `/api/launch_manifest` itself. Override the default only for another compatible deployment.
 
 ## Run
 
@@ -20,4 +24,4 @@ python -m pip install -e mcp_server
 launch-profile-mcp
 ```
 
-The Streamable HTTP endpoint is `/mcp`. External mutations remain subject to the registry's authentication and authorization policy.
+The Streamable HTTP endpoint is `/mcp`. External mutations remain subject to the registry's authentication and authorization policy. Restart the MCP process after changing environment variables.

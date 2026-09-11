@@ -122,7 +122,7 @@ npx skills add quentinzhang/launch-profile-manifest \
   --skill launch-profile-manager
 ```
 
-The directory Skill creates a human-reviewed Browser Task; delivering it still requires a compatible ConsoleX Web or local Agent Inbox adapter. The manager Skill calls an authenticated ConsoleX Launch Manifest API and requires `CONSOLEX_API_BASE_URL` plus a user-scoped `CONSOLEX_API_KEY` in the Skill environment.
+The directory Skill creates a human-reviewed Browser Task; delivering it still requires a compatible ConsoleX Web or local Agent Inbox adapter. The manager Skill and MCP client call the authenticated ConsoleX Launch Manifest API with a user-scoped `CONSOLEX_API_KEY`. Both accept `CONSOLEX_API_BASE_URL`; the MCP defaults it to `https://api.evalsone.com`.
 
 ## Versioning
 

@@ -1,1 +1,1 @@
-"""Launch Profile Registry MCP server."""
+"""Launch Operations Protocol MCP server."""

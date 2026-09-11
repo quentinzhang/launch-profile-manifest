@@ -4,7 +4,8 @@ info:
   version: 0.1.0
   description: Authenticated persistence for Launch Profile Manifests and their Release Envelopes.
 servers:
-  - url: https://api.example.com/api/launch_manifest
+  - url: https://api.evalsone.com/api/launch_manifest
+    description: Default ConsoleX Launch Operations Protocol registry
 security:
   - bearerAuth: []
 paths:
@@ -90,6 +91,8 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: ConsoleX user API key
+      description: User-scoped API key created in ConsoleX Settings.
   parameters:
     ProfileUuid:
       name: profileUuid
