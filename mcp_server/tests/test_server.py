@@ -1,7 +1,7 @@
-from __future__ import annotations
-
+import json
 import os
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from launch_profile_mcp import server
@@ -69,6 +69,32 @@ class ConfigurationTests(unittest.TestCase):
                 with patch.dict(os.environ, {"CONSOLEX_API_BASE_URL": value}, clear=True):
                     with self.assertRaisesRegex(ValueError, "must be an HTTPS origin"):
                         server._api_base_url()
+
+    def test_transport_defaults_to_streamable_http(self) -> None:
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(server._mcp_transport(), "streamable-http")
+
+    def test_consolex_bridge_can_select_stdio_transport(self) -> None:
+        with patch.dict(os.environ, {"LAUNCH_PROFILE_MCP_TRANSPORT": "stdio"}, clear=True):
+            self.assertEqual(server._mcp_transport(), "stdio")
+
+    def test_invalid_transport_is_rejected(self) -> None:
+        with patch.dict(os.environ, {"LAUNCH_PROFILE_MCP_TRANSPORT": "websocket"}, clear=True):
+            with self.assertRaisesRegex(ValueError, "must be one of"):
+                server._mcp_transport()
+
+    def test_consolex_preset_requires_a_per_user_api_key(self) -> None:
+        preset_path = Path(__file__).parents[1] / "examples" / "consolex-per-user-preset.json"
+        preset = json.loads(preset_path.read_text(encoding="utf-8"))
+        definition = preset["definition"]
+
+        self.assertTrue(preset["force_key"])
+        self.assertEqual(definition["env"]["CONSOLEX_API_KEY"], "{{CONSOLEX_API_KEY}}")
+        self.assertEqual(definition["env"]["LAUNCH_PROFILE_MCP_TRANSPORT"], "stdio")
+        self.assertEqual(definition["env"]["CONSOLEX_API_BASE_URL"], "https://api.evalsone.com")
+        fields = preset["config_schema"]["fields"]
+        self.assertEqual([field["key"] for field in fields], ["CONSOLEX_API_KEY"])
+        self.assertTrue(fields[0]["required"])
 
 
 class RequestTests(unittest.IsolatedAsyncioTestCase):

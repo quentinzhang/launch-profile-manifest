@@ -1,0 +1,27 @@
+{
+  "name": "Launch Operations Protocol",
+  "description": "Manage the current ConsoleX user's Launch Profiles and Release Envelopes.",
+  "trans_type": "bridge",
+  "definition": {
+    "bridge_url": "https://replace-with-consolex-mcp-bridge.example/mcp",
+    "command": "/home/azureuser/.local/bin/launch-profile-mcp",
+    "args": [],
+    "env": {
+      "CONSOLEX_API_BASE_URL": "https://api.evalsone.com",
+      "CONSOLEX_API_KEY": "{{CONSOLEX_API_KEY}}",
+      "LAUNCH_PROFILE_MCP_TRANSPORT": "stdio"
+    }
+  },
+  "config_schema": {
+    "fields": [
+      {
+        "key": "CONSOLEX_API_KEY",
+        "label": "ConsoleX API Key",
+        "placeholder": "eo-...",
+        "required": true
+      }
+    ]
+  },
+  "config_schema_type": "json",
+  "force_key": true
+}

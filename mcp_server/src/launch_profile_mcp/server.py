@@ -1,5 +1,5 @@
 import os
-from typing import Any
+from typing import Any, Literal, cast
 from urllib.parse import quote, urlsplit
 
 import httpx
@@ -10,6 +10,9 @@ DEFAULT_API_BASE_URL = "https://api.evalsone.com"
 API_BASE_URL_ENV = "CONSOLEX_API_BASE_URL"
 API_KEY_ENV = "CONSOLEX_API_KEY"
 LAUNCH_API_PREFIX = "/api/launch_manifest"
+MCP_TRANSPORT_ENV = "LAUNCH_PROFILE_MCP_TRANSPORT"
+DEFAULT_MCP_TRANSPORT = "streamable-http"
+SUPPORTED_MCP_TRANSPORTS = {"stdio", "sse", "streamable-http"}
 
 mcp = FastMCP(
     "Launch Operations Protocol",
@@ -47,8 +50,17 @@ def _headers() -> dict[str, str]:
     return {
         "Authorization": f"Bearer {api_key}",
         "Accept": "application/json",
-        "User-Agent": "launch-operations-protocol-mcp/0.2",
+        "User-Agent": "launch-operations-protocol-mcp/0.3",
     }
+
+
+def _mcp_transport() -> Literal["stdio", "sse", "streamable-http"]:
+    raw = str(os.environ.get(MCP_TRANSPORT_ENV) or DEFAULT_MCP_TRANSPORT).strip().lower()
+    normalized = raw.replace("_", "-")
+    if normalized not in SUPPORTED_MCP_TRANSPORTS:
+        supported = ", ".join(sorted(SUPPORTED_MCP_TRANSPORTS))
+        raise ValueError(f"{MCP_TRANSPORT_ENV} must be one of: {supported}")
+    return cast(Literal["stdio", "sse", "streamable-http"], normalized)
 
 
 def _api_url(path: str) -> str:
@@ -162,7 +174,7 @@ async def delete_release(profile_uuid: str, release_uuid: str) -> dict[str, Any]
 
 
 def main() -> None:
-    mcp.run(transport="streamable-http")
+    mcp.run(transport=_mcp_transport())
 
 
 if __name__ == "__main__":
