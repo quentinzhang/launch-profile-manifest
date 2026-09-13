@@ -40,3 +40,7 @@ Use [the preset template](examples/consolex-per-user-preset.json) as the admin-s
 5. Attach the preset MCP to the Launch Agent. A user without a configured key must remain blocked from tool execution rather than falling back to the author or another user.
 
 Process isolation is part of the security boundary. Do not reuse one spawned process across users, and do not put the API key in tool arguments, prompts, logs, or shared Agent data.
+
+## Launch Agent integration
+
+Use the [ConsoleX Launch Agent setup and prompt templates](../agents/consolex-launch-agent/README.md) with this preset. The registry MCP manages Profiles and Releases; it does not detect Sidekick or deliver Browser Tasks. ConsoleX Web supplies current-profile connection context and renders task action cards. Directory task creation can use confirmed product facts without registry access, so a missing user API key blocks registry operations but need not block task preparation.

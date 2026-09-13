@@ -1,17 +1,24 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = SKILL_ROOT.parents[1]
 BUILDER = SKILL_ROOT / "scripts" / "build_browser_task.py"
 VALIDATOR = REPO_ROOT / "skills" / "collect-launch-profile" / "scripts" / "validate_documents.py"
+
+BUILDER_SPEC = importlib.util.spec_from_file_location("directory_submission_builder", BUILDER)
+assert BUILDER_SPEC and BUILDER_SPEC.loader
+BUILDER_MODULE = importlib.util.module_from_spec(BUILDER_SPEC)
+BUILDER_SPEC.loader.exec_module(BUILDER_MODULE)
 
 
 def write_json(path: Path, value: dict) -> None:
@@ -109,7 +116,7 @@ class BuildBrowserTaskTests(unittest.TestCase):
         metadata = task["extensions"]["ai.consolex"]
         self.assertEqual(metadata["productProfileInput"], "unstructured")
         self.assertEqual(metadata["fieldEvidence"]["categories"]["status"], "derived")
-        self.assertEqual(task["provenance"]["skill"]["version"], "0.2.0")
+        self.assertEqual(task["provenance"]["skill"]["version"], "0.2.1")
 
     def test_unstructured_packet_requires_evidence_for_every_value(self) -> None:
         packet = {
@@ -192,6 +199,27 @@ class BuildBrowserTaskTests(unittest.TestCase):
         self.assertEqual(values["tags"], "launch, productivity")
         self.assertEqual(values["contactEmail"], "founder@example.com")
         self.assertEqual(values["founderName"], "Example Founder")
+
+    def test_local_delivery_requires_connected_sidekick_before_add(self) -> None:
+        status_result = subprocess.CompletedProcess(
+            args=[],
+            returncode=2,
+            stdout='{"ok":true,"ready":false,"state":"stale","note":"Reload Sidekick."}',
+            stderr="",
+        )
+
+        with patch.object(BUILDER_MODULE.subprocess, "run", return_value=status_result) as run:
+            with self.assertRaisesRegex(RuntimeError, "Browser Task was generated but not queued"):
+                BUILDER_MODULE.run_agent_inbox_add(
+                    Path("/tmp/browser-task.json"),
+                    "codex",
+                    None,
+                    Path("/tmp/consolex_addon"),
+                )
+
+        self.assertEqual(run.call_count, 1)
+        self.assertIn("status", run.call_args.args[0])
+        self.assertIn("--require-connected", run.call_args.args[0])
 
 
 if __name__ == "__main__":

@@ -39,6 +39,7 @@ skills/collect-launch-profile/    Agent Skill for product discovery
 skills/launch-profile-manager/    Agent Skill for authenticated registry management
 skills/directory-submission/       Agent Skill for directory task creation
 mcp_server/                        stdio / Streamable HTTP MCP API client
+agents/consolex-launch-agent/      ConsoleX setup guide and Chinese prompt templates
 ```
 
 ## Design principles
@@ -61,6 +62,7 @@ mcp_server/                        stdio / Streamable HTTP MCP API client
 - [Launch Profile Manager Agent Skill](skills/launch-profile-manager/SKILL.md)
 - [Directory submission Agent Skill](skills/directory-submission/SKILL.md)
 - [Streamable HTTP MCP server](mcp_server/README.md)
+- [ConsoleX Launch Agent setup and prompts](agents/consolex-launch-agent/README.md)
 
 ## Quick validation
 
@@ -107,6 +109,8 @@ python skills/directory-submission/scripts/build_browser_task.py \
   --addon-path /absolute/path/to/consolex_addon \
   --output /tmp/browser-task.json
 ```
+
+Local delivery runs `agent-inbox status --require-connected` before enqueueing. It requires an Agent Inbox CLI with the `status` command and a Native Host with heartbeat support; upgrade those local components if necessary. A failed preflight preserves the generated task file. ConsoleX Web instead uses current-browser-profile capability context and the Browser Task card; it does not require a local Native Host. See [delivery requirements](skills/directory-submission/references/delivery.md).
 
 The example target uses the reserved `.example` domain and must not be treated as a live submission destination.
 

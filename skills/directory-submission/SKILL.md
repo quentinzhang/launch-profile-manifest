@@ -29,7 +29,7 @@ Do not require installation of Launch Profile Manager when the user has supplied
 3. Create a Site Target Profile for every target. Include `id`, `hosts`, an HTTP(S) `submissionUrl`, honest `fieldMappingStatus`, selectors or field hints, and `requiredAutofillFields` for fields the current form requires.
 4. Build exactly one `directory_submission` task for the requested batch. Copy the required field values into `productProfile`; keep `profileRef` only as lineage.
 5. Validate the task against Browser Task v0.1 before delivery.
-6. Read [references/delivery.md](references/delivery.md), choose the route available in the current runtime, and execute that route (`--route` + `--deliver`). Verify either that ConsoleX rendered the action card or that Agent Inbox queued the task.
+6. Read [references/delivery.md](references/delivery.md), choose the route available in the current runtime, and execute that route (`--route` + `--deliver`). In ConsoleX Web, use the injected current-profile capability context and emit the task card. For a local agent, require a fresh single-transport Chrome Sidekick status before enqueueing; do not build a multi-Connector selection flow. Report only observable delivery evidence; if rendering or sending feedback is unavailable, report the task as generated and tell the user to add it through the card.
 7. Report queued/prefilled status separately from final submission. Stop at every manual or irreversible step.
 
 ## Build and validate
@@ -42,6 +42,10 @@ python skills/directory-submission/scripts/build_browser_task.py \
   --target /absolute/path/to/site-target-profile.json \
   --source-agent codex \
   --output /absolute/path/to/browser-task.json
+
+# Optional explicit local preflight; --deliver runs this automatically
+npm --prefix /absolute/path/to/consolex_addon run agent-inbox -- \
+  status --require-connected
 
 # Or build without Launch Profile Manager from a reviewed local Product Profile packet
 python skills/directory-submission/scripts/build_browser_task.py \

@@ -52,6 +52,36 @@ EVIDENCE_STATUSES = {"explicit", "derived", "inferred"}
 
 
 def run_agent_inbox_add(document_path: Path, source_agent: str, source_task_id: str | None, addon_path: Path) -> dict[str, Any]:
+    status_command = [
+        "npm",
+        "--prefix",
+        str(addon_path),
+        "run",
+        "agent-inbox",
+        "--",
+        "status",
+        "--require-connected",
+    ]
+    status_process = subprocess.run(
+        status_command,
+        check=False,
+        capture_output=True,
+        text=True,
+        cwd=str(addon_path.parent),
+    )
+    status_stdout = (status_process.stdout or "").strip()
+    status_stderr = (status_process.stderr or "").strip()
+    status = extract_tail_json(status_stdout)
+    if status_process.returncode != 0 or not status or status.get("ready") is not True:
+        guidance = status.get("note") if isinstance(status, dict) else "Sidekick connection status is unavailable."
+        raise RuntimeError(
+            "agent-inbox status preflight failed; Browser Task was generated but not queued\n"
+            f"command: {' '.join(status_command)}\n"
+            f"guidance: {guidance}\n"
+            f"stdout: {status_stdout}\n"
+            f"stderr: {status_stderr}"
+        )
+
     command = [
         "npm",
         "--prefix",
@@ -86,8 +116,8 @@ def run_agent_inbox_add(document_path: Path, source_agent: str, source_task_id: 
 
     parsed = extract_tail_json(stdout)
     if parsed is not None:
-        return parsed
-    return {"ok": True, "deliveryRaw": stdout}
+        return {**parsed, "connectorStatus": status}
+    return {"ok": True, "deliveryRaw": stdout, "connectorStatus": status}
 
 
 def extract_tail_json(text: str) -> dict[str, Any] | None:
@@ -511,7 +541,7 @@ def main() -> int:
         "provenance": {
             "createdAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "generator": "directory-submission reference builder",
-            "skill": {"name": "directory-submission", "version": "0.2.0", "source": SKILL_SOURCE},
+            "skill": {"name": "directory-submission", "version": "0.2.1", "source": SKILL_SOURCE},
         },
         "extensions": {"ai.consolex": input_metadata} if input_metadata else {},
     }
