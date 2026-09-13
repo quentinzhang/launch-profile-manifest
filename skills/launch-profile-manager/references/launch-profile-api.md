@@ -8,7 +8,7 @@ Authenticated endpoints receive the current user's ConsoleX API key as:
 Authorization: Bearer API_KEY_VALUE
 ```
 
-The bundled client obtains the value from `CONSOLEX_API_KEY`. Never pass it as a command argument or print it. `CONSOLEX_API_BASE_URL` must be an HTTPS origin without a path, query, fragment, or embedded credentials.
+The bundled client obtains the value from `CONSOLEX_API_KEY`. Never pass it as a command argument or print it. `CONSOLEX_API_BASE_URL` is optional and defaults to `https://api.evalsone.com`; when supplied, it must be an HTTPS origin without a path, query, fragment, or embedded credentials.
 
 ## Endpoints used
 
@@ -55,7 +55,7 @@ The client lists Release Envelopes before deletion. A non-empty list requires th
 
 ## Errors
 
-- `CONFIG_ERROR`: a required environment variable is missing or malformed.
+- `CONFIG_ERROR`: `CONSOLEX_API_KEY` is missing, or an explicitly supplied `CONSOLEX_API_BASE_URL` is malformed.
 - `401`: the API key is missing, inactive, invalid, or belongs to another environment.
 - `404`: the route is disabled, the Profile does not belong to the authenticated user, or a deletion verification succeeded.
 - `VALIDATION_ERROR` or `INVALID_MANIFEST`: correct the listed manifest fields.

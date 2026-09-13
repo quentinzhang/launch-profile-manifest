@@ -15,6 +15,7 @@ from urllib import error, parse, request
 
 BASE_URL_ENV = "CONSOLEX_API_BASE_URL"
 API_KEY_ENV = "CONSOLEX_API_KEY"
+DEFAULT_BASE_URL = "https://api.evalsone.com"
 DEFAULT_TIMEOUT_SECONDS = 45
 
 
@@ -43,12 +44,11 @@ class Config:
 
     @classmethod
     def from_environment(cls) -> "Config":
-        base_url = str(os.environ.get(BASE_URL_ENV) or "").strip().rstrip("/")
+        base_url = str(os.environ.get(BASE_URL_ENV) or DEFAULT_BASE_URL).strip().rstrip("/")
         api_key = str(os.environ.get(API_KEY_ENV) or "").strip()
-        missing = [name for name, value in ((BASE_URL_ENV, base_url), (API_KEY_ENV, api_key)) if not value]
-        if missing:
+        if not api_key:
             raise ClientError(
-                f"Missing required skill environment variable(s): {', '.join(missing)}",
+                f"Missing required skill environment variable: {API_KEY_ENV}",
                 error_type="CONFIG_ERROR",
             )
 

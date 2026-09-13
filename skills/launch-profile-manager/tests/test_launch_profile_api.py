@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 import unittest
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
@@ -59,6 +61,25 @@ class FakeClient:
         if isinstance(outcome, Exception):
             raise outcome
         return outcome
+
+
+class ConfigTests(unittest.TestCase):
+    def test_uses_production_default_when_base_url_is_unset(self) -> None:
+        with patch.dict(os.environ, {api.API_KEY_ENV: "test-key"}, clear=True):
+            config = api.Config.from_environment()
+
+        self.assertEqual(config.base_url, "https://api.evalsone.com")
+        self.assertEqual(config.api_key, "test-key")
+
+    def test_explicit_base_url_overrides_default(self) -> None:
+        with patch.dict(
+            os.environ,
+            {api.API_KEY_ENV: "test-key", api.BASE_URL_ENV: "https://apidev.evalsone.com/"},
+            clear=True,
+        ):
+            config = api.Config.from_environment()
+
+        self.assertEqual(config.base_url, "https://apidev.evalsone.com")
 
 
 class DeleteProfileTests(unittest.TestCase):

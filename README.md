@@ -126,7 +126,7 @@ npx skills add quentinzhang/launch-profile-manifest \
   --skill launch-profile-manager
 ```
 
-The directory Skill creates a human-reviewed Browser Task; delivering it still requires a compatible ConsoleX Web or local Agent Inbox adapter. The manager Skill and MCP client call the authenticated ConsoleX Launch Manifest API with a user-scoped `CONSOLEX_API_KEY`. Both accept `CONSOLEX_API_BASE_URL`; the MCP defaults it to `https://api.evalsone.com`. For the initial ConsoleX multi-user rollout, the MCP supports a per-user stdio process mode through `LAUNCH_PROFILE_MCP_TRANSPORT=stdio`; see its [ConsoleX preset instructions](mcp_server/README.md#consolex-per-user-process-mode).
+The directory Skill creates a human-reviewed Browser Task; delivering it still requires a compatible ConsoleX Web or local Agent Inbox adapter. The manager Skill and MCP client call the authenticated ConsoleX Launch Manifest API with a user-scoped `CONSOLEX_API_KEY`. Both default `CONSOLEX_API_BASE_URL` to `https://api.evalsone.com` and accept it as an override. For the initial ConsoleX multi-user rollout, the MCP supports a per-user stdio process mode through `LAUNCH_PROFILE_MCP_TRANSPORT=stdio`; see its [ConsoleX preset instructions](mcp_server/README.md#consolex-per-user-process-mode).
 
 ## Versioning
 

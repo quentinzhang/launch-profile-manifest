@@ -9,8 +9,8 @@ Use the bundled client instead of composing `curl` commands. It reads authentica
 
 ## Configuration
 
-- `CONSOLEX_API_BASE_URL`: ConsoleX API origin, such as `https://apidev.evalsone.com` or `https://api.evalsone.com`.
-- `CONSOLEX_API_KEY`: the current user's ConsoleX API key, sent as `Authorization: Bearer <api-key>`.
+- `CONSOLEX_API_KEY` (required): the current user's ConsoleX API key, sent as `Authorization: Bearer <api-key>`.
+- `CONSOLEX_API_BASE_URL` (optional): ConsoleX API origin. Defaults to `https://api.evalsone.com`; set it only to use another compatible HTTPS deployment, such as `https://apidev.evalsone.com`.
 
 Never ask the user to paste an API key into chat, pass it as a command argument, or save it in a file. If configuration is missing or authentication returns `401`, tell the user to create or rotate the key in ConsoleX Settings and update the Skill environment.
 
