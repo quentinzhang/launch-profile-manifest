@@ -32,6 +32,17 @@ Launch Profile 是可选的持久化资料来源。即使没有安装 Launch Pro
 6. 鉴权使用当前用户在平台配置的 API Key。不得要求用户把 Key 粘贴到聊天中，不得将 Key 放入工具业务参数、日志、任务或生成文件。
 7. 配置缺失或鉴权失败时，说明如何在设置中配置；如果用户只需要 Browser Task，可以继续采用已确认的产品资料。
 
+【API Key 配置引导】
+
+1. 只有操作云端 Launch Profile 或 Release 时需要 API Key；整理资料和生成 Browser Task 不要求配置 Key。
+2. 使用托管的 Launch Operations Protocol MCP 时，引导用户在该 MCP 的用户配置中设置 CONSOLEX_API_KEY。平台将其注入每次 HTTP 请求的 Authorization Header，Agent 不读取 Key 原文。
+3. 使用 launch-profile-manager Skill 时，在该 Skill 的环境变量中配置 CONSOLEX_API_KEY。两种工具的配置不自动共享，只配置实际使用的工具即可。
+4. 两种工具的默认业务 API 地址都是 https://api.evalsone.com。CONSOLEX_API_BASE_URL 仅用于覆盖；托管 MCP 的地址覆盖由部署方管理。MCP 服务 URL 和业务 API 地址不是同一个配置。
+5. 缺少 Key 时提示：“请在 ConsoleX 设置 → API Access 创建或获取你的 API Key，再填入当前使用的 MCP 用户配置或 Skill 环境变量的 CONSOLEX_API_KEY 项。配置完成后我会继续。”依据实际工具明确指出一处配置入口，不编造界面路径。
+6. Skill 的 config-check 只验证配置完整性，Key 是否有效以 API 响应为准。MCP 返回 401 时检查 Key 是否有效、是否属于当前环境以及是否保存到实际使用的 MCP 配置中。503 表示验证服务暂不可用，不应据此要求用户轮换 Key。
+7. 不在聊天中索取或回显 Key，不将其写入任务、文件或工具业务参数。共享 Agent 必须使用访问者自己的凭据，不使用作者的 Key 代替。
+8. 配置完成后继续原任务并复用已有资料。用户暂时不配置时仍可生成 Browser Task，同时说明云端 Profile 尚未保存。
+
 【Directory Submission】
 
 1. 使用已加载的 directory-submission Skill，遵守其当前 Schema、字段映射和交付规范。

@@ -47,15 +47,18 @@ class ConfigurationTests(unittest.TestCase):
             )
 
     def test_api_key_uses_authorization_bearer_header(self) -> None:
-        with patch.dict(os.environ, {"CONSOLEX_API_KEY": "eo-test-key"}, clear=True):
-            headers = server._headers()
+        headers = server._headers("eo-test-key")
         self.assertEqual(headers["Authorization"], "Bearer eo-test-key")
         self.assertNotIn("Blade-auth", headers)
 
-    def test_api_key_is_required(self) -> None:
-        with patch.dict(os.environ, {}, clear=True):
-            with self.assertRaisesRegex(ValueError, "CONSOLEX_API_KEY is required"):
-                server._headers()
+    def test_http_never_falls_back_to_environment_key(self) -> None:
+        with patch.dict(os.environ, {"CONSOLEX_API_KEY": "eo-server-owner"}, clear=True):
+            with self.assertRaisesRegex(ValueError, "Authenticated HTTP request credentials"):
+                server._api_key()
+
+    def test_legacy_sse_cannot_bypass_request_authentication(self) -> None:
+        with self.assertRaisesRegex(ValueError, "Only Streamable HTTP"):
+            server.mcp.sse_app()
 
     def test_custom_base_url_must_be_an_https_origin(self) -> None:
         invalid_values = (
@@ -70,28 +73,26 @@ class ConfigurationTests(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, "must be an HTTPS origin"):
                         server._api_base_url()
 
-    def test_transport_defaults_to_streamable_http(self) -> None:
-        with patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(server._mcp_transport(), "streamable-http")
+    def test_entrypoint_runs_only_streamable_http(self) -> None:
+        with patch.dict(os.environ, {}, clear=True), patch.object(server.mcp, "run") as run:
+            server.main()
+        run.assert_called_once_with(transport="streamable-http")
 
-    def test_consolex_bridge_can_select_stdio_transport(self) -> None:
+    def test_old_stdio_configuration_is_rejected(self) -> None:
         with patch.dict(os.environ, {"LAUNCH_PROFILE_MCP_TRANSPORT": "stdio"}, clear=True):
-            self.assertEqual(server._mcp_transport(), "stdio")
-
-    def test_invalid_transport_is_rejected(self) -> None:
-        with patch.dict(os.environ, {"LAUNCH_PROFILE_MCP_TRANSPORT": "websocket"}, clear=True):
-            with self.assertRaisesRegex(ValueError, "must be one of"):
-                server._mcp_transport()
+            with self.assertRaisesRegex(ValueError, "Only Streamable HTTP"):
+                server.main()
 
     def test_consolex_preset_requires_a_per_user_api_key(self) -> None:
-        preset_path = Path(__file__).parents[1] / "examples" / "consolex-per-user-preset.json"
+        preset_path = Path(__file__).parents[1] / "examples" / "consolex-streamable-http-preset.json"
         preset = json.loads(preset_path.read_text(encoding="utf-8"))
         definition = preset["definition"]
 
         self.assertTrue(preset["force_key"])
-        self.assertEqual(definition["env"]["CONSOLEX_API_KEY"], "{{CONSOLEX_API_KEY}}")
-        self.assertEqual(definition["env"]["LAUNCH_PROFILE_MCP_TRANSPORT"], "stdio")
-        self.assertEqual(definition["env"]["CONSOLEX_API_BASE_URL"], "https://api.evalsone.com")
+        self.assertEqual(preset["trans_type"], "http")
+        self.assertEqual(definition["Authorization"], "Bearer {{CONSOLEX_API_KEY}}")
+        self.assertTrue(definition["http_url"].endswith("/mcp"))
+        self.assertNotIn("env", definition)
         fields = preset["config_schema"]["fields"]
         self.assertEqual([field["key"] for field in fields], ["CONSOLEX_API_KEY"])
         self.assertTrue(fields[0]["required"])
@@ -101,7 +102,7 @@ class RequestTests(unittest.IsolatedAsyncioTestCase):
     async def test_request_uses_default_url_and_api_key(self) -> None:
         FakeAsyncClient.response = FakeResponse(200, {"succ": True, "profiles": []})
         with (
-            patch.dict(os.environ, {"CONSOLEX_API_KEY": "eo-test-key"}, clear=True),
+            patch.object(server, "_api_key", return_value="eo-test-key"),
             patch.object(server.httpx, "AsyncClient", FakeAsyncClient),
         ):
             result = await server._request("GET", "/profiles")
@@ -123,7 +124,7 @@ class RequestTests(unittest.IsolatedAsyncioTestCase):
             {"error_msg": "invalid credential eo-secret-key"},
         )
         with (
-            patch.dict(os.environ, {"CONSOLEX_API_KEY": "eo-secret-key"}, clear=True),
+            patch.object(server, "_api_key", return_value="eo-secret-key"),
             patch.object(server.httpx, "AsyncClient", FakeAsyncClient),
         ):
             with self.assertRaisesRegex(RuntimeError, r"invalid credential \[REDACTED\]"):

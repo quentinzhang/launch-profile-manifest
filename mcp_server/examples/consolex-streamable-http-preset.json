@@ -1,0 +1,21 @@
+{
+  "name": "Launch Operations Protocol",
+  "description": "Manage the current ConsoleX user's Launch Profiles and Release Envelopes over authenticated Streamable HTTP.",
+  "trans_type": "http",
+  "definition": {
+    "http_url": "https://replace-with-hosted-launch-mcp.example/mcp",
+    "Authorization": "Bearer {{CONSOLEX_API_KEY}}"
+  },
+  "config_schema": {
+    "fields": [
+      {
+        "key": "CONSOLEX_API_KEY",
+        "label": "ConsoleX API Key",
+        "placeholder": "eo-...",
+        "required": true
+      }
+    ]
+  },
+  "config_schema_type": "json",
+  "force_key": true
+}

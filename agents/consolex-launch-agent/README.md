@@ -6,7 +6,7 @@ Reference configuration for a ConsoleX agent that manages Launch Profiles and pr
 
 1. Copy [system-prompt.zh-CN.md](system-prompt.zh-CN.md) into the agent's system-instruction field. It contains standing operating rules, not a per-run user request.
 2. Load [collect-launch-profile](../../skills/collect-launch-profile/SKILL.md) for product discovery and [directory-submission](../../skills/directory-submission/SKILL.md) for task building, validation, and delivery.
-3. Attach the [Launch Operations Protocol MCP per-user preset](../../mcp_server/README.md#consolex-per-user-process-mode) for registry access. Each user supplies their own API key through platform configuration. The default API origin is `https://api.evalsone.com`.
+3. Attach the [hosted Streamable HTTP MCP preset](../../mcp_server/README.md#consolex-hosted-multi-tenant-preset) for registry access. Each user supplies their own API key through MCP user configuration; ConsoleX sends it in the request's Authorization header. Register a system-owned public preset with `force_key: true` so a shared Launch Agent uses its caller's configuration. The default registry API origin is `https://api.evalsone.com`.
 4. Use [launch-profile-manager](../../skills/launch-profile-manager/SKILL.md) as an alternative registry client in environments that execute Skills with configured credentials. It is optional when MCP already supplies registry operations, and is not required for directory tasks from confirmed product facts.
 5. Provide browsing tools for current directory checks and a compatible Python runtime with `jsonschema` for the reference validators. Attaching a Skill alone does not prove its scripts or delivery adapter are available.
 

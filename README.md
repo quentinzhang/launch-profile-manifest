@@ -38,7 +38,7 @@ openapi/                           Registry API contract
 skills/collect-launch-profile/    Agent Skill for product discovery
 skills/launch-profile-manager/    Agent Skill for authenticated registry management
 skills/directory-submission/       Agent Skill for directory task creation
-mcp_server/                        stdio / Streamable HTTP MCP API client
+mcp_server/                        Multi-tenant Streamable HTTP MCP API client
 agents/consolex-launch-agent/      ConsoleX setup guide and Chinese prompt templates
 ```
 
@@ -126,7 +126,7 @@ npx skills add quentinzhang/launch-profile-manifest \
   --skill launch-profile-manager
 ```
 
-The directory Skill creates a human-reviewed Browser Task; delivering it still requires a compatible ConsoleX Web or local Agent Inbox adapter. The manager Skill and MCP client call the authenticated ConsoleX Launch Manifest API with a user-scoped `CONSOLEX_API_KEY`. Both default `CONSOLEX_API_BASE_URL` to `https://api.evalsone.com` and accept it as an override. For the initial ConsoleX multi-user rollout, the MCP supports a per-user stdio process mode through `LAUNCH_PROFILE_MCP_TRANSPORT=stdio`; see its [ConsoleX preset instructions](mcp_server/README.md#consolex-per-user-process-mode).
+The directory Skill creates a human-reviewed Browser Task; delivering it still requires a compatible ConsoleX Web or local Agent Inbox adapter. The manager Skill reads the user's `CONSOLEX_API_KEY` from its environment. The hosted MCP uses Streamable HTTP only and authenticates each request with `Authorization: Bearer <user-api-key>`; it never falls back to a server-wide key. Both default the registry origin to `https://api.evalsone.com`, with an optional server-side `CONSOLEX_API_BASE_URL` override. See the [hosted multi-tenant MCP configuration](mcp_server/README.md#consolex-hosted-multi-tenant-preset).
 
 ## Versioning
 
